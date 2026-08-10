@@ -1,0 +1,12 @@
+# Core agent framework
+langgraph>=0.2.0
+langchain>=0.3.0
+langchain-openai>=0.2.0
+langchain-core>=0.3.0
+
+# LTspice output parsing
+ltspice>=1.0.0
+numpy>=1.24.0
+
+# Environment management
+python-dotenv>=1.0.0

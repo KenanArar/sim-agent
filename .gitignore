@@ -1,0 +1,35 @@
+# ── Secrets ──────────────────────────────────────────────
+.env
+.env.local
+*.key
+
+# ── Python ───────────────────────────────────────────────
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# ── LTspice output (regenerated on every run) ────────────
+circuits/*.log
+circuits/*.raw
+circuits/*.op.raw
+circuits/*.net
+circuits/*.fft
+
+# Netlists written by the Level 3 analyzer
+circuits/*_analyzed.cir
+
+# ── Personal working notes (not for publication) ─────────
+PROJECT_CONTEXT.md
+
+# ── Editors / tooling ────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+.claude/settings.local.json
+
+# ── OS ───────────────────────────────────────────────────
+.DS_Store

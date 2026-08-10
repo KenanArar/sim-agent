@@ -1,0 +1,9 @@
+* Voltage Divider
+* V(out) = V1 * R2 / (R1 + R2) = 5 * 10k / (10k + 10k) = 2.5V
+
+V1 in 0 DC 5
+R1 in out 10k
+R2 out 0 10k
+
+.op
+.end
