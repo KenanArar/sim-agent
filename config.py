@@ -28,3 +28,10 @@ CIRCUITS_DIR = PROJECT_ROOT / "circuits"
 # Swap model string to use Gemini, Anthropic, etc.
 LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+
+# ── RTL verification (Level 4) ─────────────────────────────────────
+# Requires Icarus Verilog on PATH (brew install icarus-verilog) and cocotb.
+RTL_DIR = PROJECT_ROOT / "rtl"              # SystemVerilog sources
+RTL_TB_DIR = RTL_DIR / "generated"          # generated testbenches land here
+RTL_TESTS_DIR = PROJECT_ROOT / "rtl_tests"  # cocotb test modules (test_<module>.py)
+RTL_BUILD_DIR = PROJECT_ROOT / "rtl_build"  # sim builds, VCDs, results.xml

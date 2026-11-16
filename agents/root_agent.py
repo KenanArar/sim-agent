@@ -4,6 +4,8 @@ Root Orchestrator Agent.
 Routes user requests to the appropriate specialized subagent:
   - simulate_circuit  →  Level 1 (run/interpret existing simulations)
   - generate_circuit  →  Level 2 (design new circuits from specs)
+  - analyze_circuit   →  Level 3 (pick + run analysis for a bare netlist)
+  - verify_rtl        →  Level 4 (SystemVerilog testbenches, cocotb regression triage)
 
 The root agent never runs simulations or builds netlists itself.
 It only decides which subagent should handle the request.
@@ -25,6 +27,7 @@ from config import LLM_MODEL, OPENAI_API_KEY
 from agents.agent_l1 import build_simulation_graph
 from agents.agent_l2 import build_generator_graph
 from agents.agent_l3 import build_l3_graph
+from agents.agent_l4 import build_l4_graph
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -80,13 +83,30 @@ def analyze_circuit(request: str) -> str:
     return result["messages"][-1].content
 
 
+@tool
+def verify_rtl(request: str) -> str:
+    """
+    Verify SystemVerilog RTL (digital logic, not SPICE netlists): generate a
+    testbench for a module, or run its cocotb regression and cluster the
+    failures by root cause.
+
+    Examples: "generate a testbench for counter.sv",
+              "run the regression on alu.sv and tell me why it fails"
+
+    Args:
+        request: The user's full RTL verification request in natural language.
+    """
+    graph = build_l4_graph()
+    result = graph.invoke({"messages": [HumanMessage(content=request)]})
+    return result["messages"][-1].content
+
 
 
 # ═══════════════════════════════════════════════════════════════════
 # GRAPH
 # ═══════════════════════════════════════════════════════════════════
 
-TOOLS = [simulate_circuit, generate_circuit, analyze_circuit]
+TOOLS = [simulate_circuit, generate_circuit, analyze_circuit, verify_rtl]
 
 SYSTEM_PROMPT = """You are the main interface for an LTspice circuit simulation assistant.
 You route user requests to the right specialist:
@@ -102,6 +122,11 @@ You route user requests to the right specialist:
   or wants the agent to determine what simulation to run.
   Examples: "analyze mystery.cir", "what does unknown.cir do",
             "figure out and run the right simulation for amp.cir"
+
+- verify_rtl: Use for SystemVerilog / RTL / digital design work (.sv files), as
+  opposed to analog SPICE netlists (.cir files).
+  Examples: "generate a testbench for counter.sv", "run the alu regression",
+            "why are the alu tests failing"
 
 Pass the user's request verbatim to the appropriate tool — do not paraphrase or
 truncate it. The specialist agents will handle the details.

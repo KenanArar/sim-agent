@@ -22,6 +22,10 @@ circuits/*.fft
 # Netlists written by the Level 3 analyzer
 circuits/*_analyzed.cir
 
+# ── RTL build output (Level 4) ───────────────────────────
+rtl_build/
+rtl/generated/
+
 # ── Personal working notes (not for publication) ─────────
 PROJECT_CONTEXT.md
 
